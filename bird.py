@@ -51,11 +51,19 @@ for i in range(N-2):
 	spawn_pig = 'python pig.py '+ str(pigs[i]) + ' ' + str(N) + ' ' + str(stones) + ' &'
 	os.system(spawn_pig)
 	conn,addr = bird_socket.accept()
-	conf_info=str(pigs[i])+' '+str(addr[0])+' '+str(addr[1])+'\n';
-	conf.write(conf_info);
-	msg=conn.recv(addr[1]);
-	loc=str('['+str(pos[i][0])+','+str(pos[i][1])+']');
+	conf_info=str(pigs[i])+' '+str(addr[0])+' '+str(addr[1])+'\n'
+	conf.write(conf_info)
+	msg = conn.recv(addr[1])
+	loc=str('['+str(pos[i][0])+','+str(pos[i][1])+']')
 	conn.send(loc);
+
+for j in range(2):
+	spawn_coordinator = 'python coordinator.py ' + str(coordinators[j]) + ' ' + str(N) + ' ' + str(pigs_split[j]) + ' &'
+	os.system(spawn_coordinator)
+	conn,addr = bird_socket.accept()
+	conf_info=str(coordinators[j])+' '+str(addr[0])+' '+str(addr[1])+'\n'
+	conf.write(conf_info)
+
 conf.close()
 print 'All network info written to net.conf'
 
