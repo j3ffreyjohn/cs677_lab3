@@ -6,3 +6,7 @@ Code for Lab 3 (CS677) : Concepts: Replication, Fault Tolerance and Cache Consis
 How to run the Code
 ===================
 
+The only code file to run is bird.py . Run it as : 
+python bird.py <number_of_pigs> <number_bird_launches>
+
+e.g. python bird.py 5 3
