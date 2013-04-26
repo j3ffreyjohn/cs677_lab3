@@ -1,6 +1,7 @@
 #This is a class file which will have functions used across files
 class util:
 	#Function to clean up a list passed over socket
+	#l is the list to be "cleaned" and c_flag indicates whether request is from coordinator or pig
 	def clean_list(self,l,c_flag):
 		l_clean=[]
 		for i in range(0,len(l),2):

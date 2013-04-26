@@ -2,11 +2,16 @@
 import socket
 import sys
 import random
+from util import *
+
+#Create an object of util function for common tasks
+u = util()
 
 #Receive basic info from bird
 pigId=sys.argv[1]
 N=sys.argv[2]
 stones=(sys.argv[3:])
+stones=u.clean_list(stones,0)
 
 #Create a pig_socket and send connection details to the bird
 try:

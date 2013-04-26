@@ -3,11 +3,16 @@
 import socket
 import sys
 import random
+from util import *
+
+#Create an object of util class for helper functions
+u = util()
 
 #Receive basic info from bird
 cId = sys.argv[1]
 N = sys.argv[2]
 pig_list = sys.argv[3:]
+pig_list = u.clean_list(pig_list,1)
 
 #Create a coordinator_socket and send connection details to the bird
 try:
@@ -31,4 +36,4 @@ except socket.error:
 	print 'Unable to send ACK message to bird'
 	exit(1)
 
-print 'Coordinator ', cId, ': joined the network'
+print 'Coordinator ', cId, ': ',pig_list
