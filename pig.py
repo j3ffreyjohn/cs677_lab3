@@ -1,11 +1,12 @@
 #This is the pig process
 import socket
+import sys
 import random
 
 #Receive basic info from bird
 pigId=sys.argv[1];
 N=sys.argv[2];
-stones=(sys.argv[4:])
+stones=(sys.argv[3:])
 
 #Create a pig_socket and send connection details to the bird
 try:
@@ -29,9 +30,9 @@ except socket.error:
 	print 'Unable to send ACK message to bird';
 	exit(1)
 #Once the pigs have joined the network, we will receive the assigned grid location for this process
-loc=s.recv(8888);
+loc=pig_socket.recv(8888);
 loc=loc.split(',');
 x=int(loc[0][1:]);
 y=int(loc[1][:-1]);
-s.close();
+pig_socket.close();
 print 'Pig',pigId,' :','[',str(x),',',str(y),']'
