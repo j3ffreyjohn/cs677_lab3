@@ -30,3 +30,15 @@ class util:
 			conn[cur[0]]=cur_l
 		return conn
 
+	#Function to process the net.conf data and give the connection params of the other coordinator
+	#Input is conf :: List of lines of the net.conf file and cId : the pigId of the coordinator calling this function
+	def get_other_coordinator(self, cId):
+		conf = open('net.conf','r')
+		conf = conf.readlines()
+		cId1 = conf[-1:][0].split()
+		cId2 = conf[-2:-1][0].split()
+		if cId==cId1[0]:
+			return cId2[0]
+		else:
+			return cId1[0]
+		

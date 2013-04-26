@@ -41,6 +41,17 @@ print 'Coordinator ', cId, ': ',pig_list
 target_loc = c_socket.recv(8888)
 print 'Coordinator ', cId, ' : target location = ', target_loc
 a = c_socket.recv(8888)
+conf = open('net.conf','r')
+conn_info = u.get_conn_info(conf.readlines())
+other_c = u.get_other_coordinator(cId)			#Simple util function to get the connection parameters of the other coordinator pig
+print 'Coordinator ', cId, ': The other coordinator is ',other_c
+
+#Simple Implementation of Fault Tolerance:: Check to see if the other coordinator is alive or not
+
+
+
+
+
 
 c_socket.close()
 
