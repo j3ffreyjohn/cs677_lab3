@@ -8,6 +8,8 @@ import socket
 N = int(sys.argv[1])		# N is the number of pigs in the system
 M = int(sys.argv[2])		# M is the number of bird launches in one game
 
+print 'Angry Birds Game Started ... '
+
 #Choose two pigs to be the coordinators at random
 coordinators = sample(range(1,N+1),2)	
 pigs = list(set(range(1,N+1)) - set(coordinators))
@@ -19,14 +21,14 @@ pigs_split = [pigs[i::2] for i in range(2)]	#Assign the pigs randomly to one of 
 #Generate random [x,y] coordinates for all the pigs in the NX3 grid
 pos=[];
 while(len(pos) < N-2):
-	p=[randint(1,N),randint(1,2)];
+	p=[randint(1,N),randint(1,3)];
 	if p not in pos:
 		pos.append(p);
 
 #Generate grid locations for the stone columns
 stones=[];
 while(len(stones)<3):
-	p=[randint(1,N),randint(1,2)];
+	p=[randint(1,N),randint(1,3)];
 	if p not in pos and p not in stones:
 		stones.append(p);
 
@@ -55,5 +57,9 @@ for i in range(N-2):
 	loc=str('['+str(pos[i][0])+','+str(pos[i][1])+']');
 	conn.send(loc);
 conf.close()
+print 'All network info written to net.conf'
 
+
+
+print 'Angry Birds Game Terminated'
 

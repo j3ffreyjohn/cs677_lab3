@@ -29,6 +29,7 @@ try:
 except socket.error:
 	print 'Unable to send ACK message to bird';
 	exit(1)
+	
 #Once the pigs have joined the network, we will receive the assigned grid location for this process
 loc=pig_socket.recv(8888);
 loc=loc.split(',');
