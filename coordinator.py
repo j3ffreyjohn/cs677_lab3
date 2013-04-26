@@ -38,9 +38,10 @@ except socket.error:
 
 print 'Coordinator ', cId, ': ',pig_list
 
+target_loc = c_socket.recv(8888)
+print 'Coordinator ', cId, ' : target location = ', target_loc
 a = c_socket.recv(8888)
-conf = open('net.conf','r')
-conn_info = u.get_conn_info(conf.readlines())	#Coordinators know the connection parameters to everyone now
+
 c_socket.close()
 
 

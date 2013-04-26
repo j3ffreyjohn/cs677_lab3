@@ -2,9 +2,10 @@
 
 import os
 import sys
-from random import randint, shuffle, sample
+from random import randint, shuffle, sample, choice
 import socket
 from util import *
+from time import sleep
 
 N = int(sys.argv[1])		# N is the number of pigs in the system
 M = int(sys.argv[2])		# M is the number of bird launches in one game
@@ -63,12 +64,17 @@ for i in range(N-2):
 	conn.send(loc)
 	conn_pigs[pigs[i]]=conn
 
+target_ind = pigs.index(choice(pigs))           #Choose a target at random
+target_loc = str('['+str(pos[target_ind][0])+','+str(pos[target_ind][1])+']')
+
 for j in range(2):
 	spawn_coordinator = 'python coordinator.py ' + str(coordinators[j]) + ' ' + str(N) + ' ' + str(pigs_split[j]) + ' &'
 	os.system(spawn_coordinator)
 	conn,addr = bird_socket.accept()
 	conf_info=str(coordinators[j])+' '+str(addr[0])+' '+str(addr[1])+'\n'
 	conf.write(conf_info)
+	msg = conn.recv(addr[1])
+	conn.send(target_loc)
 	conn_pigs[coordinators[j]]=conn
 
 conf.close()
@@ -76,17 +82,11 @@ conf.close()
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())
 
-
 #Let every pig know that the net.conf has been written
 for k in range(1,N+1):
 	conn_pigs[k].send('1')
 
 print 'All network info written to net.conf'
-
-
-
-
-
 
 print 'Angry Birds Game Terminated'
 
