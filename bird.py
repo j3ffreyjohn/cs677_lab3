@@ -49,7 +49,7 @@ for i in range(N-2):
 	spawn_pig = 'python pig.py '+ str(pigs[i]) + ' ' + str(N) + ' ' + str(stones) + ' &'
 	os.system(spawn_pig)
 	conn,addr = bird_socket.accept()
-	conf_info=str(pigs[i]+1)+' '+str(addr[0])+' '+str(addr[1])+'\n';
+	conf_info=str(pigs[i])+' '+str(addr[0])+' '+str(addr[1])+'\n';
 	conf.write(conf_info);
 	msg=conn.recv(addr[1]);
 	loc=str('['+str(pos[i][0])+','+str(pos[i][1])+']');
