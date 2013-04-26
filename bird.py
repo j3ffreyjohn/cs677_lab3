@@ -4,11 +4,15 @@ import os
 import sys
 from random import randint, shuffle, sample
 import socket
+from util import *
 
 N = int(sys.argv[1])		# N is the number of pigs in the system
 M = int(sys.argv[2])		# M is the number of bird launches in one game
 
 print 'Angry Birds Game Started ... '
+
+#Create an object of the util class
+u = util()
 
 #Choose two pigs to be the coordinators at random
 coordinators = sample(range(1,N+1),2)	
@@ -47,6 +51,7 @@ bird_socket.listen(N)		#This socket can receive upto N requests at a time
 
 #Spawn the pigs and the coordinators
 conf = open('net.conf','w')		#All network info will be written to the net.conf file
+conn_pigs = {}				#Store the connection objects to all peers
 for i in range(N-2):
 	spawn_pig = 'python pig.py '+ str(pigs[i]) + ' ' + str(N) + ' ' + str(stones) + ' &'
 	os.system(spawn_pig)
@@ -55,7 +60,8 @@ for i in range(N-2):
 	conf.write(conf_info)
 	msg = conn.recv(addr[1])
 	loc=str('['+str(pos[i][0])+','+str(pos[i][1])+']')
-	conn.send(loc);
+	conn.send(loc)
+	conn_pigs[pigs[i]]=conn
 
 for j in range(2):
 	spawn_coordinator = 'python coordinator.py ' + str(coordinators[j]) + ' ' + str(N) + ' ' + str(pigs_split[j]) + ' &'
@@ -63,9 +69,22 @@ for j in range(2):
 	conn,addr = bird_socket.accept()
 	conf_info=str(coordinators[j])+' '+str(addr[0])+' '+str(addr[1])+'\n'
 	conf.write(conf_info)
+	conn_pigs[coordinators[j]]=conn
 
 conf.close()
+
+conf = open('net.conf','r')
+conn_info = u.get_conn_info(conf.readlines())
+
+
+#Let every pig know that the net.conf has been written
+for k in range(1,N+1):
+	conn_pigs[k].send('1')
+
 print 'All network info written to net.conf'
+
+
+
 
 
 
