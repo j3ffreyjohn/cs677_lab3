@@ -44,12 +44,25 @@ a = c_socket.recv(8888)
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())
 other_c = u.get_other_coordinator(cId)			#Simple util function to get the connection parameters of the other coordinator pig
-print 'Coordinator ', cId, ': The other coordinator is ',other_c
 
-#Simple Implementation of Fault Tolerance:: Check to see if the other coordinator is alive or not
-
-
-
+#Simple Implementation of Fault Tolerance :: Check to see if the other coordinator is alive or not.
+#The coordinator with lower cId will ping the higher to see his decision (sleep with some probability).
+#If that coordinator is asleep, then this coordinator cannot sleep (since we have only two coordinators in this case).
+#if that coordinator is alive, decide to sleep with some probability and let the other coordinator know about it.
+if int(cId) < int(other_c):
+	#ping the other coordinator and wait for reply
+	if other_c_sleep:
+		#other coordinator has decided to sleep, update pig_list for this iteration
+	else:
+		#decide with some probability whether to sleep or not
+		#let the other coordinator know about decision
+else:
+	#wait for a ping from the other coordinator
+	#decide whether to sleep or not with probability
+	#reply back to other coordinator and wait for response
+	if other_c_sleep:
+		#update pig_list for this iteration
+	
 
 
 

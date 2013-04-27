@@ -84,7 +84,13 @@ conn_info = u.get_conn_info(conf.readlines())
 
 #Let every pig know that the net.conf has been written
 for k in range(1,N+1):
-	conn_pigs[k].send('1')
+	conn_pigs[k].send('1')				
+
+for i in range(M):
+	#select target randomly
+	#do bird launches
+	#wait for status back from coordinator(s)
+	
 
 print 'All network info written to net.conf'
 
