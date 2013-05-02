@@ -10,7 +10,8 @@ u = util()
 #Receive basic info from bird
 pigId=sys.argv[1]
 N=sys.argv[2]
-stones=(sys.argv[3:])
+M=sys.argv[3]
+stones=(sys.argv[4:])
 stones=u.clean_list(stones,0)
 
 #Create a pig_socket and send connection details to the bird

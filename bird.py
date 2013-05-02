@@ -54,7 +54,7 @@ bird_socket.listen(N)		#This socket can receive upto N requests at a time
 conf = open('net.conf','w')		#All network info will be written to the net.conf file
 conn_pigs = {}				#Store the connection objects to all peers
 for i in range(N-2):
-	spawn_pig = 'python pig.py '+ str(pigs[i]) + ' ' + str(N) + ' ' + str(stones) + ' &'
+	spawn_pig = 'python pig.py '+ str(pigs[i]) + ' ' + str(N) + ' ' + str(M) + ' ' + str(stones) + ' &'
 	os.system(spawn_pig)
 	conn,addr = bird_socket.accept()
 	conf_info=str(pigs[i])+' '+str(addr[0])+' '+str(addr[1])+'\n'
@@ -68,7 +68,7 @@ target_ind = pigs.index(choice(pigs))           #Choose a target at random
 target_loc = str('['+str(pos[target_ind][0])+','+str(pos[target_ind][1])+']')
 
 for j in range(2):
-	spawn_coordinator = 'python coordinator.py ' + str(coordinators[j]) + ' ' + str(N) + ' ' + str(pigs_split[j]) + ' &'
+	spawn_coordinator = 'python coordinator.py ' + str(coordinators[j]) + ' ' + str(N) + ' ' + str(M) + ' ' + str(pigs_split[j]) + ' &'
 	os.system(spawn_coordinator)
 	conn,addr = bird_socket.accept()
 	conf_info=str(coordinators[j])+' '+str(addr[0])+' '+str(addr[1])+'\n'
