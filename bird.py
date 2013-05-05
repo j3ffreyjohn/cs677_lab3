@@ -87,6 +87,9 @@ conn_info = u.get_conn_info(conf.readlines())
 for k in range(1,N+1):
 	conn_pigs[k].send('1')				
 
+#Wait to receive ready status from both coordinators
+
+#Do M bird launches
 #for i in range(M):
 	#select target randomly
 #	target_ind = pigs.index(choice(pigs))

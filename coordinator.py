@@ -67,6 +67,12 @@ if int(cId) < int(other_c):
 	if doink_sleep_status=='1':
 		print 'Oink : Doink decided to sleep for this round'
 		pig_list = filter(lambda x: x!=int(cId) and x!=int(other_c), range(1,N+1)) 	#Update pig_list to have Doink's pigs as well
+	
+	#Tell every pig in pig_list that Oink is their coordinator
+	for pig in pig_list:
+		pig_conn = conn_info[str(pig)]
+		pig_sock = u.sock_connect(u.get_socket(),pig_conn)
+		u.send_message(pig_sock,str(cId))
 else:
 	#wait for a ping from the other coordinator
 	doink_socket = u.sock_bind(u.get_socket(),my_ip,my_port)
@@ -79,7 +85,15 @@ else:
 	if random.random() > 0.5:
 		doink_sleep_status = 1
 	oink_conn.send(str(doink_sleep_status))
-	
+
+	#If not sleeping, tell every pig in pig_list that Doink is their coordinator
+	if doink_sleep_status==0:
+		for pig in pig_list:
+                	pig_conn = conn_info[str(pig)]
+                	pig_sock = u.sock_connect(u.get_socket(),pig_conn)
+                	u.send_message(pig_sock,str(cId))
+		
+		
 
 #For a graceful exit of all processes, every process will tell the bird process that they have completed
 c_socket.sendall('Done')
