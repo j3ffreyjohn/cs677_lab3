@@ -4,7 +4,6 @@ import socket
 import sys
 import random
 from util import *
-
 #Create an object of util class for helper functions
 u = util()
 
@@ -42,32 +41,45 @@ print 'Coordinator ', cId, ': ',pig_list
 target_loc = c_socket.recv(8888)
 print 'Coordinator ', cId, ' : target location = ', target_loc
 a = c_socket.recv(8888)
+c_socket.close()
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())
 other_c = u.get_other_coordinator(cId)			#Simple util function to get the connection parameters of the other coordinator pig
+my_ip = conn_info[cId][0]
+my_port = conn_info[cId][1]
+
 
 #Simple Implementation of Fault Tolerance :: Check to see if the other coordinator is alive or not.
+#Convention :: Coordinator with smaller Id is Oink and the one with higer Id is called Doink
 #The coordinator with lower cId will ping the higher to see his decision (sleep with some probability).
 #If that coordinator is asleep, then this coordinator cannot sleep (since we have only two coordinators in this case).
 #if that coordinator is alive, decide to sleep with some probability and let the other coordinator know about it.
 if int(cId) < int(other_c):
 	#ping the other coordinator and wait for reply
-	if other_c_sleep:
+	doink_conn = conn_info[other_c]
+	oink_socket = u.sock_connect(u.get_socket(),doink_conn)
+	u.send_message(oink_socket,'0 Are you asleep?')
+	print 'Coordinator Oink pinged Coordinator Doink'
+	#if other_c_sleep:
 		#other coordinator has decided to sleep, update pig_list for this iteration
-	else:
+	#else:
 		#decide with some probability whether to sleep or not
 		#let the other coordinator know about decision
 else:
 	#wait for a ping from the other coordinator
+	doink_socket = u.sock_bind(u.get_socket(),my_ip,my_port)
+	doink_socket.listen(1)
+	oink_conn,oink_addr = doink_socket.accept()
+	oink_message = oink_conn.recv(oink_addr[1])
+	print 'Coordinator Doink received from Coordinator Oink : ', oink_message
 	#decide whether to sleep or not with probability
 	#reply back to other coordinator and wait for response
-	if other_c_sleep:
+	#if other_c_sleep:
 		#update pig_list for this iteration
 	
 
 
 
-c_socket.close()
 
 
 

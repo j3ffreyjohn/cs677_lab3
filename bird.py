@@ -78,6 +78,7 @@ for j in range(2):
 	conn_pigs[coordinators[j]]=conn
 
 conf.close()
+print 'All network info written to net.conf'
 
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())
@@ -86,13 +87,17 @@ conn_info = u.get_conn_info(conf.readlines())
 for k in range(1,N+1):
 	conn_pigs[k].send('1')				
 
-for i in range(M):
+#for i in range(M):
 	#select target randomly
+#	target_ind = pigs.index(choice(pigs))
+#	target_loc = str('['+str(pos[target_ind][0])+','+str(pos[target_ind][1])+']')
+	
 	#do bird launches
 	#wait for status back from coordinator(s)
 	
 
-print 'All network info written to net.conf'
+#Termination condition for thid process to avoid sleep calls
 
+#sleep(20)
 print 'Angry Birds Game Terminated'
 
