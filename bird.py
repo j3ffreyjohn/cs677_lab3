@@ -96,8 +96,9 @@ for k in range(1,N+1):
 	#wait for status back from coordinator(s)
 	
 
-#Termination condition for thid process to avoid sleep calls
+#Termination condition :: Receive Done message from all pigs and coordinators
+for k in range(1,N+1):
+	msg = conn_pigs[k].recv(1024)
 
-#sleep(20)
 print 'Angry Birds Game Terminated'
 

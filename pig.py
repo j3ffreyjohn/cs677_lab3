@@ -48,4 +48,10 @@ print 'Pig',pigId,' :','[',str(x),',',str(y),']'
 a = pig_socket.recv(8888)
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())		#Every pig knows about the configurations of others now
+
+
+
+
+#Every process will send a 'Done' message to the bird process for a graceful exit
+pig_socket.sendall('Done')
 pig_socket.close()

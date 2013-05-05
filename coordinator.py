@@ -41,7 +41,6 @@ print 'Coordinator ', cId, ': ',pig_list
 target_loc = c_socket.recv(8888)
 print 'Coordinator ', cId, ' : target location = ', target_loc
 a = c_socket.recv(8888)
-c_socket.close()
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())
 other_c = u.get_other_coordinator(cId)			#Simple util function to get the connection parameters of the other coordinator pig
@@ -78,8 +77,9 @@ else:
 		#update pig_list for this iteration
 	
 
-
-
+#For a graceful exit of all processes, every process will tell the bird process that they have completed
+c_socket.sendall('Done')
+c_socket.close()
 
 
 
