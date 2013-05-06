@@ -141,6 +141,25 @@ class util:
 			new_loc[1] = my_loc[1]
                 return [hit_status, new_loc]
 
+
+        #Function to update the database. Maintains consistency between the local caches and the database
+        #Input: Cache
+        def update_town_register(self, cache, iter_num):
+                pigs_info=[]
+                for item in cache.items():
+                        pigs_info.append(list(item))
+
+                d=database(N)
+                for pig in pigs_info:
+                        d.update_location(pig[0],pig[1][1][0], pig[1][1][1]);
+
+                for pig in pigs_info:
+                        d.update_Status(pig[0],pig[1][0],iter_num);
+                
+                        
+                
+
+                
                         
                                 
                         
