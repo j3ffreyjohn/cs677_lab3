@@ -2,7 +2,7 @@
 
 import socket
 import sys
-import random
+from random import random
 from util import *
 #Create an object of util class for helper functions
 u = util()
@@ -75,7 +75,7 @@ for i in range(M):
 			print 'Oink : Doink decided to sleep for this round'
 			pig_list = filter(lambda x: x!=int(cId) and x!=int(other_c), range(1,N+1)) 	#Update pig_list to have Doink's pigs as well
 		else:
-			if random.random() > 0.7:
+			if random() > 0.7:
 				oink_sleep_status = 1
 		u.send_message(oink_socket,str(oink_sleep_status))
 			
@@ -99,7 +99,7 @@ for i in range(M):
 		oink_message = oink_conn.recv(64)
 	
 		#decide whether to sleep of not with some probability
-		if random.random() > 0.5:
+		if random() > 0.5:
 			doink_sleep_status = 1
 		oink_conn.send(str(doink_sleep_status))
 		oink_sleep_status = oink_conn.recv(64)

@@ -41,6 +41,7 @@ loc = pig_socket.recv(8888)
 loc = loc.split(',')
 x = int(loc[0][1:])
 y = int(loc[1][:-1])
+my_loc = [x,y]
 
 print 'Pig',pigId,' :','[',str(x),',',str(y),']'
 
@@ -58,8 +59,11 @@ for i in range(M):
 	c_conn, c_addr = c_sock.accept()
 	data  = c_conn.recv(64)
 	data = data.split()
-	print 'Pig ',pigId,' Iteration ',i+1,': My coordinator is ',data[0],' Target is : [',data[1],',',data[2],']'
+	target_loc = [int(data[1]),int(data[2])]
+	print 'Pig ',pigId,' Iteration ',i+1,': My coordinator is ',data[0],' Target is : ',target_loc
 	#Now the pigs know the target (from bird_approaching message) and their location
+	result=u.play_game(my_loc,target_loc,stones)
+	print 'Pig ',pigId, ' : Hit Status : ',result[0],' New Location : ',result[1]
 	c_sock.close()
 
 #Every process will send a 'Done' message to the bird process for a graceful exit

@@ -115,11 +115,11 @@ class util:
 
         #Function to define the behavior of each pig for each game
         #Input: Pig location, Target location, Stone locations. Output: Hit status, New location
-        def play_game(my_loc, target_loc, stones):
-                new_loc=[]
+        def play_game(self,my_loc, target_loc, stones):
+                new_loc=[-1,-1]
                 hit_status=0;
                 if(my_loc==target_loc):                 #Check if current location is the target
-                        if(random()>0.75):              #if target is the location of the pig, it is random with some random probability
+                        if(random()>0.5):              #if target is the location of the pig, it is random with some random probability
                                 hit_status=1;
                                 new_loc[0]=my_loc[0];
                                 new_loc[1]=my_loc[1];
@@ -136,6 +136,9 @@ class util:
                                         hit_status=1;
                                         new_loc[0]=my_loc[0];
                                         new_loc[1]=my_loc[1];
+		else:
+			new_loc[0] = my_loc[0]
+			new_loc[1] = my_loc[1]
                 return [hit_status, new_loc]
 
                         
