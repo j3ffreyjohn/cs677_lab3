@@ -56,8 +56,10 @@ for i in range(M):
 	c_sock = u.sock_bind(u.get_socket(),my_ip,my_port)
 	c_sock.listen(1)
 	c_conn, c_addr = c_sock.accept()
-	my_coord  = c_conn.recv(64)
-	print 'Pig ',pigId,' Iteration ',i+1,': My coordinator is ',my_coord
+	data  = c_conn.recv(64)
+	data = data.split()
+	print 'Pig ',pigId,' Iteration ',i+1,': My coordinator is ',data[0],' Target is : [',data[1],',',data[2],']'
+	#Now the pigs know the target (from bird_approaching message) and their location
 	c_sock.close()
 
 #Every process will send a 'Done' message to the bird process for a graceful exit
