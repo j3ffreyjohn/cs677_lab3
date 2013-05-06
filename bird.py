@@ -5,6 +5,7 @@ import sys
 from random import randint, shuffle, sample, choice
 import socket
 from util import *
+from database import *
 from time import sleep
 
 N = int(sys.argv[1])		# N is the number of pigs in the system
@@ -12,8 +13,9 @@ M = int(sys.argv[2])		# M is the number of bird launches in one game
 
 print 'Angry Birds Game Started ... '
 
-#Create an object of the util class
+#Create objects of the util and database class
 u = util()
+d = database(N)
 
 #Choose two pigs to be the coordinators at random
 coordinators = sample(range(1,N+1),2)	
@@ -87,12 +89,14 @@ conn_info = u.get_conn_info(conf.readlines())
 for k in range(1,N+1):
 	conn_pigs[k].send('1')				
 
-#Wait to receive ready status from both coordinators
+u.init_locations(N,pigs,pos)
 
 #Do M bird launches
 for i in range(M):
-	print '*****ITERATION ',i+1,'*****'
+	print '***** Bird Launch ',i+1,'*****'
 	target_loc = '1 2'					#dummy target location
+	target_new_loc = d.get_loc(u.get_target(N,pigs))
+	print 'TARGET == ', target_new_loc
 	#send this target loc to each coordinator
 	for j in range(2):
 		conn_pigs[coordinators[j]].sendall(target_loc)

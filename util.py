@@ -4,6 +4,7 @@ import sys
 import socket
 from time import sleep
 from random import choice
+from database import *
 class util:
 	#Function to clean up a list passed over socket
 	#l is the list to be "cleaned" and c_flag indicates whether request is from coordinator or pig
@@ -90,21 +91,27 @@ class util:
 
         #Function return a target at random
 	#Input N: Number of pigs in the game, Output target: PigID of a pig which has not been hit selected at random
-	def get_target(N):
-                d=database()
+	def get_target(self,N,pigs):
+                d=database(N)
                 status=[]                
-                for i in range(1,N+1):
-                        status.append(d.get_status(i));
+                for i in range(len(pigs)):
+                        status.append(d.get_status(pigs[i]));
 
                 not_hit=[]
 
                 for i in range(len(status)):
                         if status[i]==0:
-                                not_hit.append(i+1);
+                                not_hit.append(pigs[i]);
 
                 target=choice(not_hit);
                 return target
                                 
                         
-                        
+	def init_locations(self,N,pigs,pos):
+		d = database(N)
+		for i in range(len(pos)):
+			d.update_location(int(pigs[i]),pos[i][0],pos[i][1])
+
+
+			                        
 
