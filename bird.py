@@ -119,5 +119,10 @@ for i in range(M):
 for k in range(1,N+1):
 	msg = conn_pigs[k].recv(1024)
 
+#Find the total number of pigs affected 
+pigs_hit = d.stats(N)
+num_pigs_hit = len(pigs_hit)
+hit_rate = float(100*num_pigs_hit)/(N-2)
+print 'Number of pigs hit : ', num_pigs_hit,' Hit Rate : ',hit_rate,'%'
 print 'Angry Birds Game Terminated'
 
