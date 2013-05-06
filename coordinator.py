@@ -39,32 +39,38 @@ except socket.error:
 print 'Coordinator ', cId, ': ',pig_list
 
 target_loc = c_socket.recv(8888)
-print 'Coordinator ', cId, ' : target location = ', target_loc
-a = c_socket.recv(8888)
+#print 'Coordinator ', cId, ' : target location = ', target_loc
+a = c_socket.recv(1)
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())
 other_c = u.get_other_coordinator(cId)			#Simple util function to get the connection parameters of the other coordinator pig
 my_ip = conn_info[cId][0]
 my_port = conn_info[cId][1]
-
+pig_list_backup = pig_list
 
 for i in range(M):
 	#############################
 	# Code for each bird launch #
 	#############################
+	
 	#Sleep Status for the coordinators. O for not sleeping, and 1 for sleeping
 	doink_sleep_status = 0
-
+	pig_list = pig_list_backup
 	#Simple Implementation of Fault Tolerance :: Check to see if the other coordinator is alive or not.
 	#Convention :: Coordinator with smaller Id is Oink and the one with higher Id is called Doink
 	#The coordinator with lower cId will ping the higher to see his decision (sleep with some probability).
 	if int(cId) < int(other_c):
+		#Receive the target for this iteration from the bird
+		#print 'Oink waiting to receive . . .'
+        	target_loc = c_socket.recv(64)
+        	print 'Coordinator ',cId,' Iteration no : ',i+1,' target : ', target_loc
 		#ping the other coordinator and wait for reply
 		doink_conn = conn_info[other_c]
-		oink_socket = u.sock_connect(u.get_socket(),doink_conn)
+		if i==0:
+			oink_socket = u.sock_connect(u.get_socket(),doink_conn)
 		u.send_message(oink_socket,'0 Are you asleep?')
 		print 'Coordinator Oink pinged Coordinator Doink'
-		doink_sleep_status = oink_socket.recv(1024);
+		doink_sleep_status = oink_socket.recv(64);
 		if doink_sleep_status=='1':
 			print 'Oink : Doink decided to sleep for this round'
 			pig_list = filter(lambda x: x!=int(cId) and x!=int(other_c), range(1,N+1)) 	#Update pig_list to have Doink's pigs as well
@@ -75,11 +81,16 @@ for i in range(M):
 			pig_sock = u.sock_connect(u.get_socket(),pig_conn)
 			u.send_message(pig_sock,str(cId))
 	else:
+		#Receive the target for this iteration from the bird
+		#iprint 'Doink waiting to receive . . .'
+        	target_loc = c_socket.recv(64)
+        	print 'Coordinator ',cId,' Iteration no : ',i+1,' target : ', target_loc
 		#wait for a ping from the other coordinator
-		doink_socket = u.sock_bind(u.get_socket(),my_ip,my_port)
-		doink_socket.listen(1)
-		oink_conn,oink_addr = doink_socket.accept()
-		oink_message = oink_conn.recv(oink_addr[1])
+		if i==0:
+			doink_socket = u.sock_bind(u.get_socket(),my_ip,my_port)
+			doink_socket.listen(1)
+			oink_conn,oink_addr = doink_socket.accept()
+		oink_message = oink_conn.recv(64)
 		print 'Coordinator Doink received from Coordinator Oink : ', oink_message
 	
 		#decide whether to sleep of not with some probability
@@ -94,7 +105,8 @@ for i in range(M):
                 		pig_sock = u.sock_connect(u.get_socket(),pig_conn)
                 		u.send_message(pig_sock,str(cId))
 		
-		
+	#Tell the bird process that this iteration is done
+	c_socket.sendall('Iteration Done!')		
 
 #For a graceful exit of all processes, every process will tell the bird process that they have completed
 c_socket.sendall('Done')

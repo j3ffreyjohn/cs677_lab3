@@ -90,7 +90,15 @@ for k in range(1,N+1):
 #Wait to receive ready status from both coordinators
 
 #Do M bird launches
-#for i in range(M):
+for i in range(M):
+	print '*****ITERATION ',i+1,'*****'
+	target_loc = '1 2'					#dummy target location
+	#send this target loc to each coordinator
+	for j in range(2):
+		conn_pigs[coordinators[j]].sendall(target_loc)
+	for j in range(2):
+		msg = conn_pigs[coordinators[j]].recv(1024)
+	sleep(5)
 	#select target randomly
 #	target_ind = pigs.index(choice(pigs))
 #	target_loc = str('['+str(pos[target_ind][0])+','+str(pos[target_ind][1])+']')

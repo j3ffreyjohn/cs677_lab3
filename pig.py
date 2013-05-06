@@ -9,8 +9,8 @@ u = util()
 
 #Receive basic info from bird
 pigId=sys.argv[1]
-N=sys.argv[2]
-M=sys.argv[3]
+N=int(sys.argv[2])
+M=int(sys.argv[3])
 stones=(sys.argv[4:])
 stones=u.clean_list(stones,0)
 
@@ -56,9 +56,9 @@ for i in range(M):
 	c_sock = u.sock_bind(u.get_socket(),my_ip,my_port)
 	c_sock.listen(1)
 	c_conn, c_addr = c_sock.accept()
-	my_coord  = c_conn.recv(c_addr[1])
-	print 'Pig ',pigId,' : My coordinator is ',my_coord
-
+	my_coord  = c_conn.recv(64)
+	print 'Pig ',pigId,' Iteration ',i+1,': My coordinator is ',my_coord
+	c_sock.close()
 
 #Every process will send a 'Done' message to the bird process for a graceful exit
 pig_socket.sendall('Done')
