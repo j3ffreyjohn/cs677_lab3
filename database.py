@@ -108,7 +108,23 @@ class database:
         	loc=[row[1],row[2]]
         	conn.close()
         	return loc
-                
+
+        #Function to return the statistics of the complete game
+        #Output stats: Is a list that contains the pigs that were hit
+        def stats(self,N):
+                stats=[]
+                conn=sqlite3.connect('database.db')
+                c=conn.cursor()
+                for pig in range(1,N+1):
+                        query="SELECT * FROM HITSTATUS WHERE Pig"+str(pig)+"='1'"
+                        c.execute(query)
+                        t=c.fetchone()
+                        if t!=None:
+                                stats.append(pig)
+                conn.close()
+                return stats
+                                
+                        
             
 ##    def update_Status(PigID,status,iter_num):
 ##        f=open('database.txt','r+');                    #Open File
