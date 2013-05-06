@@ -48,6 +48,7 @@ my_ip = conn_info[cId][0]
 my_port = conn_info[cId][1]
 pig_list_backup = pig_list
 
+
 for i in range(M):
 	#############################
 	# Code for each bird launch #
@@ -57,6 +58,7 @@ for i in range(M):
 	oink_sleep_status = 0
 	doink_sleep_status = 0
 	pig_list = pig_list_backup
+	cache = {}
 	#Simple Implementation of Fault Tolerance :: Check to see if the other coordinator is alive or not.
 	#Convention :: Coordinator with smaller Id is Oink and the one with higher Id is called Doink
 	#The coordinator with lower cId will ping the higher to see his decision (sleep with some probability).
@@ -86,6 +88,13 @@ for i in range(M):
 				pig_conn = conn_info[str(pig)]
 				pig_sock = u.sock_connect(u.get_socket(),pig_conn)
 				u.send_message(pig_sock,str(cId)+' '+target_loc)
+				pig_result = pig_sock.recv(64)
+				pig_result = pig_result.split()
+				pig_status = int(pig_result[0])
+				pig_location = [int(pig_result[1]),int(pig_result[2])]
+				cache[pig]=[pig_status,pig_location]
+				#u.update_town_register(cache)
+				print 'Oink : Pig ',pig,' : Status : ',pig_status,' Location : ', pig_location
 	else:
 		#Receive the target for this iteration from the bird
 		#iprint 'Doink waiting to receive . . .'
@@ -113,6 +122,12 @@ for i in range(M):
                 		pig_conn = conn_info[str(pig)]
                 		pig_sock = u.sock_connect(u.get_socket(),pig_conn)
                 		u.send_message(pig_sock,str(cId)+' '+target_loc)
+				pig_result = pig_sock.recv(64)
+                                pig_result = pig_result.split()
+                                pig_status = int(pig_result[0])
+                                pig_location = [int(pig_result[1]),int(pig_result[2])]
+				cache[pig] = [pig_status,pig_location]
+                                print 'Doink : Pig ',pig,' : Status : ',pig_status,' Location : ', pig_location
 		
 	#Tell the bird process that this iteration is done
 	c_socket.sendall('Iteration Done!')		

@@ -63,7 +63,9 @@ for i in range(M):
 	print 'Pig ',pigId,' Iteration ',i+1,': My coordinator is ',data[0],' Target is : ',target_loc
 	#Now the pigs know the target (from bird_approaching message) and their location
 	result=u.play_game(my_loc,target_loc,stones)
-	print 'Pig ',pigId, ' : Hit Status : ',result[0],' New Location : ',result[1]
+	hitStatus = result[0]
+	my_loc = result[1]
+	c_conn.send(str(hitStatus)+' '+str(my_loc[0])+' '+str(my_loc[1]))
 	c_sock.close()
 
 #Every process will send a 'Done' message to the bird process for a graceful exit
