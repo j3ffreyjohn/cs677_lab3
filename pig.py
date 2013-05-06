@@ -48,4 +48,17 @@ print 'Pig',pigId,' :','[',str(x),',',str(y),']'
 a = pig_socket.recv(8888)
 conf = open('net.conf','r')
 conn_info = u.get_conn_info(conf.readlines())		#Every pig knows about the configurations of others now
+my_ip = conn_info[pigId][0]
+my_port = conn_info[pigId][1]
+
+#Every pig will wait to hear from their coordinator
+c_sock = u.sock_bind(u.get_socket(),my_ip,my_port)
+c_sock.listen(1)
+c_conn, c_addr = c_sock.accept()
+my_coord  = c_conn.recv(c_addr[1])
+print 'Pig ',pigId,' : My coordinator is ',my_coord
+
+
+#Every process will send a 'Done' message to the bird process for a graceful exit
+pig_socket.sendall('Done')
 pig_socket.close()

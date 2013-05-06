@@ -1,6 +1,8 @@
 #This is a class file which will have functions used across files
 from collections import Counter
-
+import sys
+import socket
+from time import sleep
 class util:
 	#Function to clean up a list passed over socket
 	#l is the list to be "cleaned" and c_flag indicates whether request is from coordinator or pig
@@ -41,4 +43,47 @@ class util:
 			return cId2[0]
 		else:
 			return cId1[0]
-		
+	
+	#Function to get a new socket
+	def get_socket(self):
+		try:
+        		new_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        		new_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		except sys.error,msg:
+        		print 'Socket connection failed ' + msg
+        		exit(1)
+		return new_socket
+
+	#Function to send a message on a socket
+	#Input is the socket bound to the ip and address of receiver and the message to be sent
+	def send_message(self,sock,message):
+		try:
+        		sock.sendall(message)
+		except socket.error:
+        		print 'Unable to send ACK message to bird'
+        		exit(1)
+	
+	#Function to bind a socket to a given IP and Port
+	#Return the bound socket	
+	def sock_bind(self,sock,ip,port):
+		try:
+ 			socket.socket()
+			sock.bind((ip,int(port)))
+ 		except socket.error, msg:
+ 			print 'Bind with port failed'
+ 			exit(1)
+		return sock
+
+	#Function to connect to another connection till the connection is established
+	#Input is the socket with which you want to connect and conn, the connection parameter list of the target
+	def sock_connect(self,sock,conn):
+		while True:
+			try:
+				sock = self.get_socket()			#Fixed bug :: once failed socket gets initialized wrongly
+				sock.connect((conn[0],int(conn[1])))
+				break
+			except socket.error,msg:
+				sleep(1)
+				continue
+		return sock
+
