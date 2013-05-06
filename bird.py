@@ -14,7 +14,7 @@ if os.path.isfile("database.db"):
 
 N = int(sys.argv[1])		# N is the number of pigs in the system
 M = int(sys.argv[2])		# M is the number of bird launches in one game
-
+rep = int(sys.argv[3])		#rep=0 indicates no replication and rep=1 indicates replication
 print 'Angry Birds Game Started ... '
 
 #Create objects of the util and database class
@@ -74,7 +74,7 @@ target_ind = pigs.index(choice(pigs))           #Choose a target at random
 target_loc = str('['+str(pos[target_ind][0])+','+str(pos[target_ind][1])+']')
 
 for j in range(2):
-	spawn_coordinator = 'python coordinator.py ' + str(coordinators[j]) + ' ' + str(N) + ' ' + str(M) + ' ' + str(pigs_split[j]) + ' &'
+	spawn_coordinator = 'python coordinator.py ' + str(coordinators[j]) + ' ' + str(N) + ' ' + str(M) + ' ' + str(rep) + ' ' + str(pigs_split[j]) + ' &'
 	os.system(spawn_coordinator)
 	conn,addr = bird_socket.accept()
 	conf_info=str(coordinators[j])+' '+str(addr[0])+' '+str(addr[1])+'\n'
