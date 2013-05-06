@@ -11,7 +11,8 @@ u = util()
 cId = sys.argv[1]
 N = int(sys.argv[2])
 M = int(sys.argv[3])
-pig_list = sys.argv[4:]
+replication = int(sys.argv[4])
+pig_list = sys.argv[5:]
 pig_list = u.clean_list(pig_list,1)
 
 #Create a coordinator_socket and send connection details to the bird
@@ -79,8 +80,15 @@ for i in range(M):
 		else:
 			if random() > 0.7:
 				oink_sleep_status = 1
+
+		#If no replication, Oink cannot sleep
+                if replication==0:
+                        oink_sleep_status=0
 		u.send_message(oink_socket,str(oink_sleep_status))
-			
+		
+		#Decide whether to replicate or not
+		if replication==0:
+			oink_sleep_status=0	
 			
 		#If not sleeping, tell every pig in pig_list that Oink is their coordinator and send the target location for this iteration
 		if oink_sleep_status==0:
@@ -109,6 +117,11 @@ for i in range(M):
 		#decide whether to sleep of not with some probability
 		if random() > 0.5:
 			doink_sleep_status = 1
+
+		#If no replication, force Doink to sleep
+		if replication==0:
+			doink_sleep_status=1
+
 		oink_conn.send(str(doink_sleep_status))
 		oink_sleep_status = oink_conn.recv(64)
 		if oink_sleep_status=='1':
