@@ -47,51 +47,52 @@ other_c = u.get_other_coordinator(cId)			#Simple util function to get the connec
 my_ip = conn_info[cId][0]
 my_port = conn_info[cId][1]
 
-#############################
-# Code for each bird launch #
-#############################
-#Sleep Status for the coordinators. O for not sleeping, and 1 for sleeping
-oink_sleep_status = 0
-doink_sleep_status = 0
 
-#Simple Implementation of Fault Tolerance :: Check to see if the other coordinator is alive or not.
-#Convention :: Coordinator with smaller Id is Oink and the one with higher Id is called Doink
-#The coordinator with lower cId will ping the higher to see his decision (sleep with some probability).
-if int(cId) < int(other_c):
-	#ping the other coordinator and wait for reply
-	doink_conn = conn_info[other_c]
-	oink_socket = u.sock_connect(u.get_socket(),doink_conn)
-	u.send_message(oink_socket,'0 Are you asleep?')
-	print 'Coordinator Oink pinged Coordinator Doink'
-	doink_sleep_status = oink_socket.recv(1024);
-	if doink_sleep_status=='1':
-		print 'Oink : Doink decided to sleep for this round'
-		pig_list = filter(lambda x: x!=int(cId) and x!=int(other_c), range(1,N+1)) 	#Update pig_list to have Doink's pigs as well
-	
-	#Tell every pig in pig_list that Oink is their coordinator
-	for pig in pig_list:
-		pig_conn = conn_info[str(pig)]
-		pig_sock = u.sock_connect(u.get_socket(),pig_conn)
-		u.send_message(pig_sock,str(cId))
-else:
-	#wait for a ping from the other coordinator
-	doink_socket = u.sock_bind(u.get_socket(),my_ip,my_port)
-	doink_socket.listen(1)
-	oink_conn,oink_addr = doink_socket.accept()
-	oink_message = oink_conn.recv(oink_addr[1])
-	print 'Coordinator Doink received from Coordinator Oink : ', oink_message
-	
-	#decide whether to sleep of not with some probability
-	if random.random() > 0.5:
-		doink_sleep_status = 1
-	oink_conn.send(str(doink_sleep_status))
+for i in range(M):
+	#############################
+	# Code for each bird launch #
+	#############################
+	#Sleep Status for the coordinators. O for not sleeping, and 1 for sleeping
+	doink_sleep_status = 0
 
-	#If not sleeping, tell every pig in pig_list that Doink is their coordinator
-	if doink_sleep_status==0:
+	#Simple Implementation of Fault Tolerance :: Check to see if the other coordinator is alive or not.
+	#Convention :: Coordinator with smaller Id is Oink and the one with higher Id is called Doink
+	#The coordinator with lower cId will ping the higher to see his decision (sleep with some probability).
+	if int(cId) < int(other_c):
+		#ping the other coordinator and wait for reply
+		doink_conn = conn_info[other_c]
+		oink_socket = u.sock_connect(u.get_socket(),doink_conn)
+		u.send_message(oink_socket,'0 Are you asleep?')
+		print 'Coordinator Oink pinged Coordinator Doink'
+		doink_sleep_status = oink_socket.recv(1024);
+		if doink_sleep_status=='1':
+			print 'Oink : Doink decided to sleep for this round'
+			pig_list = filter(lambda x: x!=int(cId) and x!=int(other_c), range(1,N+1)) 	#Update pig_list to have Doink's pigs as well
+	
+		#Tell every pig in pig_list that Oink is their coordinator
 		for pig in pig_list:
-                	pig_conn = conn_info[str(pig)]
-                	pig_sock = u.sock_connect(u.get_socket(),pig_conn)
-                	u.send_message(pig_sock,str(cId))
+			pig_conn = conn_info[str(pig)]
+			pig_sock = u.sock_connect(u.get_socket(),pig_conn)
+			u.send_message(pig_sock,str(cId))
+	else:
+		#wait for a ping from the other coordinator
+		doink_socket = u.sock_bind(u.get_socket(),my_ip,my_port)
+		doink_socket.listen(1)
+		oink_conn,oink_addr = doink_socket.accept()
+		oink_message = oink_conn.recv(oink_addr[1])
+		print 'Coordinator Doink received from Coordinator Oink : ', oink_message
+	
+		#decide whether to sleep of not with some probability
+		if random.random() > 0.5:
+			doink_sleep_status = 1
+		oink_conn.send(str(doink_sleep_status))
+
+		#If not sleeping, tell every pig in pig_list that Doink is their coordinator
+		if doink_sleep_status==0:
+			for pig in pig_list:
+                		pig_conn = conn_info[str(pig)]
+                		pig_sock = u.sock_connect(u.get_socket(),pig_conn)
+                		u.send_message(pig_sock,str(cId))
 		
 		
 
