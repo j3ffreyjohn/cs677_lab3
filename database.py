@@ -1,4 +1,5 @@
 #This is the database server
+#Takes as argument the number of pigs in the game (N)
 import sqlite3;
 class database:
     def __init__(self, N):                              #N: Number of pigs
