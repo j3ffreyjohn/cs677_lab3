@@ -12,5 +12,5 @@ python bird.py <number_of_pigs> <number_bird_launches> <replicate_or_not>
 Example Usage
 =============
 
-python bird.py 5 3 0 for a game with 5 pigs and 3 bird launches without replication \\n
-python bird.py 5 3 1 for a game with 5 pigs and 3 bird launches with replication
+<p> python bird.py 5 3 0 for a game with 5 pigs and 3 bird launches without replication </p>
+<p> python bird.py 5 3 1 for a game with 5 pigs and 3 bird launches with replication </p>
