@@ -1,1 +1,95 @@
 #This is the database server
+import sqlite3;
+class database:
+    def __init__(self, N):                              #N: Number of pigs
+        conn=sqlite3.connect('database.db')             #Establish connection with the database
+        c=conn.cursor()
+        for i in range(1,N+1):                          #Construct query string
+            if i==1:
+                strr='(Iteration real PRIMARY KEY, Pig1 real,'
+            elif i!=N:
+                strr=strr+'Pig'+str(i)+' real,'
+            else:
+                strr=strr+'Pig'+str(i)+' real)'
+
+        try:
+            create_str='CREATE TABLE HITSTATUS'+strr;   #Query string to create table
+            c.execute(create_str);                      #Create table
+            conn.commit();                              #Commit changes to database
+        except err:                                     #If table already exists
+            print 'DATABASE TABLE EXISTS'
+            
+
+    def update_Status(PigID, status,iter_num):
+        query="SELECT * FROM HITSTASTUS WHERE ITERATION='"+iter_num+"'" #Check to see if  the Iteration number has been published before
+        query="\"\""+query+"\"\""
+        c.execute(query)
+        t=c.fetchone()
+        if t==None:                                                     #If iteration number doesn't exist
+            query="INSERT INTO HITSTATUS (Iteration, Pig"+str(PigID)+") values("+str(iter_num)+","+str(status)+")"      #INSERT NEW ROW FOR THIS ITERATION 
+            c.execute(query);
+            conn.commit()
+        else:
+            query="UPDATE HITSTATUS SET "+PigID+"="+"\'"+str(status)+"\'"+"WHERE Iteration="+"\'"+str(iter_num)+"\'"    #UPDATE STATUS FOR THE PIG IN THE CURRENT ITERATION
+            query="\"\""+query+"\"\""
+            c.execute(query);
+            conn.commit()
+        
+    
+        
+    
+        
+        
+            
+##    def update_Status(PigID,status,iter_num):
+##        f=open('database.txt','r+');                    #Open File
+##        temp=f.read().splitlines();                     #read lines from the file. The content is unformatted
+##        f.close()
+##        open('database.txt', 'w').close();                  #Clear the file. Everything will be re-written after update.
+##        stat=[]
+##        for n in range(0,len(temp)):                    #Begin formatting.
+##            stat.append([])                             #Creating an empty list of lists. The contents of the file will be stored here in proper format.
+##            
+##        for i in temp:                                  #Get each line of the file and store in 'stat' as a list.                             
+##            j=i.split();
+##            for elm in j:
+##                stat[temp.index(i)].append(int(elm))    
+##        
+##        updated=False;                                  #flag
+##        for i=0:len(stat):                              #Updating info about current pig in the database
+##            if(stat[i][0]==PigId):                      #Check if the current pig has a record in the database
+##                if(status=='HIT'):
+##                    stat[i].append(1);                  #1 means hit and 0 means not hit
+##                else:
+##                    stat[i].append(0);
+##                updated=True;                           #Set flag if the current pig has a record in the database
+##
+##        if updated==False:                              #Indicates that the pig doesn't have a record
+##            if status=='HIT':
+##                stat.append([PigID, 1]);                #Append information about the current pig
+##            else:
+##                stat.append([PigID, 0]);
+##
+##        #Write the status into the file
+##        f=open('database.txt','w');
+##        for l in stat:
+##            for e in l:
+##		f.writelines(str(e)+' ')
+##            f.writelines('\n')
+##        f.close();                                      #Update complete.
+
+
+    
+
+        
+            
+            
+
+        
+                
+        
+        
+        
+        
+    
+    
