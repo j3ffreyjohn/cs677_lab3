@@ -41,21 +41,25 @@ class database:
     	def update_Status(self,PigID, status,iter_num):
         	conn=sqlite3.connect('database.db')             #Establish connection with the database
         	c=conn.cursor()
-        	query="SELECT * FROM HITSTASTUS WHERE ITERATION='"+iter_num+"'" #Check to see if  the Iteration number has been published before
-        	#query="\"\""+query+"\"\""
+        	query="SELECT * FROM HITSTATUS WHERE Pig"+str(PigID)+"='1'"
         	c.execute(query)
         	t=c.fetchone()
-        	if t==None:                                                     #If iteration number doesn't exist
-			#INSERT NEW ROW FOR THIS ITERATION
-            		query="INSERT INTO HITSTATUS (Iteration, Pig"+str(PigID)+") values("+str(iter_num)+","+str(status)+")" 
- 			c.execute(query);
-            		conn.commit()
-        	else:
-			#UPDATE STATUS FOR THE PIG IN THE CURR    ENT ITERATION
-            		query="UPDATE HITSTATUS SET Pig"+str(PigID)+"="+"\'"+str(status)+"\'"+"WHERE Iteration="+"\'"+str(iter_num)+"\'"
-            		#query="\"\""+query+"\"\""
-            		c.execute(query);
-            		conn.commit()
+        	if t==None:
+                        query="SELECT * FROM HITSTASTUS WHERE ITERATION='"+iter_num+"'" #Check to see if  the Iteration number has been published before
+                        #query="\"\""+query+"\"\""
+                        c.execute(query)
+                        t=c.fetchone()
+                        if t==None:                                                     #If iteration number doesn't exist
+                                #INSERT NEW ROW FOR THIS ITERATION
+                                query="INSERT INTO HITSTATUS (Iteration, Pig"+str(PigID)+") values("+str(iter_num)+","+str(status)+")" 
+                                c.execute(query);
+                                conn.commit()
+                        else:
+                                #UPDATE STATUS FOR THE PIG IN THE CURR    ENT ITERATION
+                                query="UPDATE HITSTATUS SET Pig"+str(PigID)+"="+"\'"+str(status)+"\'"+"WHERE Iteration="+"\'"+str(iter_num)+"\'"
+                                #query="\"\""+query+"\"\""
+                                c.execute(query);
+                                conn.commit()
         	conn.close()
     
 	#Function to update location of each pig after each iteration.
