@@ -4,6 +4,7 @@ import sys
 import socket
 from time import sleep
 from random import choice
+from random import random
 from database import *
 class util:
 	#Function to clean up a list passed over socket
@@ -112,6 +113,36 @@ class util:
 		for i in range(len(pos)):
 			d.update_location(int(pigs[i]),pos[i][0],pos[i][1])
 
+        #Function to define the behavior of each pig for each game
+        #Input: Pig location, Target location, Stone locations. Output: Hit status, New location
+        def play_game(my_loc, target_loc, stones):
+                new_loc=[]
+                hit_status=0;
+                if(my_loc==target_loc):                 #Check if current location is the target
+                        if(random()>0.75):              #if target is the location of the pig, it is random with some random probability
+                                hit_status=1;
+                                new_loc[0]=my_loc[0];
+                                new_loc[1]=my_loc[1];
+                        else:                                
+                                if([my_loc[0]+1,my_loc[1]] not in stones):
+                                        new_loc=[my_loc[0]+1,my_loc[1]];
+                                elif([my_loc[0]-1,my_loc[1]] not in stones):
+                                        new_loc=[my_loc[0]-1,my_loc[1]];
+                                elif([my_loc[0],my_loc[1]+1] not in stones):
+                                        new_loc=[my_loc[0],my_loc[1]+1];
+                                elif([my_loc[0],my_loc[1]-1] not in stones):
+                                        new_loc=[my_loc[0],my_loc[1]-1];
+                                else:
+                                        hit_status=1;
+                                        new_loc[0]=my_loc[0];
+                                        new_loc[1]=my_loc[1];
+                return [hit_status, new_loc]
+
+                        
+                                
+                        
+                        
+                
 
 			                        
 

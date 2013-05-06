@@ -19,7 +19,10 @@ class database:
             		c.execute(create_str);                      #Create table HITSTATUS
             		conn.commit();                              #Commit changes to database
         	except:                                     #If table already exists
-            		print 'DATABASE TABLE EXISTS'
+            		#print 'DATABASE TABLE EXISTS'
+                        f=open('DBLOG.txt','w')
+                        f.write('NEW INSTANCE OF database Created.\n TABLE HITSTATUS EXISTS')
+                        f.close()
 
         	#Create table PIGLOCATION
         	#The table stores the location of each pig
@@ -27,7 +30,10 @@ class database:
             		c.execute("""CREATE TABLE PIGLOCATION (PigID Integer PRIMARY KEY, location_X Integer, location_Y Integer)""");
             		conn.commit()
         	except:
-            		print 'DATABASE ALREADY EXISTS'
+            		#print 'DATABASE ALREADY EXISTS'
+                        f=open('DBLOG.txt','w')
+                        f.write('TABLE PIGLOCATION EXISTS')
+                        f.close()
         	conn.close()
 
             
