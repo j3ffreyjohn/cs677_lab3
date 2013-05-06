@@ -2,6 +2,7 @@
 #Takes as argument the number of pigs in the game (N)
 import sqlite3;
 class database:
+    #This constructor is used (ideally) for updates.
     def __init__(self, N):                              #N: Number of pigs
         conn=sqlite3.connect('database.db')             #Establish connection with the database
         c=conn.cursor()
@@ -15,13 +16,28 @@ class database:
 
         try:
             create_str='CREATE TABLE HITSTATUS'+strr;   #Query string to create table
-            c.execute(create_str);                      #Create table
+            c.execute(create_str);                      #Create table HITSTATUS
             conn.commit();                              #Commit changes to database
         except err:                                     #If table already exists
             print 'DATABASE TABLE EXISTS'
-            
 
+        #Create table PIGLOCATION
+        #The table stores the location of each pig
+        try:
+            c.execute("""CREATE TABLE PIGLOCATION (PigID Integer PRIMARY KEY, location_X Integer, location_Y Integer)""");
+            conn.commit()
+        except:
+            print 'DATABASE ALREADY EXISTS'
+        conn.close()
+
+    #This constructor is used (ideally) for get status'
+        def __init__(self):
+            print 'Object created'
+            
+    #Function to update status of each pig at each iteration
     def update_Status(PigID, status,iter_num):
+        conn=sqlite3.connect('database.db')             #Establish connection with the database
+        c=conn.cursor()
         query="SELECT * FROM HITSTASTUS WHERE ITERATION='"+iter_num+"'" #Check to see if  the Iteration number has been published before
         query="\"\""+query+"\"\""
         c.execute(query)
@@ -31,16 +47,57 @@ class database:
             c.execute(query);
             conn.commit()
         else:
-            query="UPDATE HITSTATUS SET "+PigID+"="+"\'"+str(status)+"\'"+"WHERE Iteration="+"\'"+str(iter_num)+"\'"    #UPDATE STATUS FOR THE PIG IN THE CURRENT ITERATION
+            query="UPDATE HITSTATUS SET Pig"+str(PigID)+"="+"\'"+str(status)+"\'"+"WHERE Iteration="+"\'"+str(iter_num)+"\'"    #UPDATE STATUS FOR THE PIG IN THE CURRENT ITERATION
             query="\"\""+query+"\"\""
             c.execute(query);
             conn.commit()
-        
+        conn.close()
     
-        
+    #Function to update location of each pig after each iteration.
+    def update_location(PigID, loc_x, loc_y):
+        conn=sqlite3.connect('database.db')             #Establish connection with the database
+        c=conn.cursor()
+        query="SELECT * FROM PIGLOCATION WHERE PigID='"+str(PigID)+"'";             #Check if the PigID exists
+        query="\"\""+query+"\"\"";
+        c.execute(query)
+        t=c.fetchone()
+        if t==None:                                                                 #If the PigID doesnt exist, add a new row with this PigID and insert its location
+            query="INSERT INTO PIGLOCATION (PigID, location_X, location_Y) values("+str(PigID)+","+str(loc_x)+","+str(loc_y)+")";
+            c.execute(query);
+            conn.commit()   
+        except:                                                                     #If the PigID exists, update location of the Pig
+            query="UPDATE PIGLOCATION SET location_X='"+str(loc_x)+"', location_Y='"+str(loc_y)+"' WHERE PigID='"+str(PigID)+"'";
+            query="\"\""+query+"\"\""
+            c.execute(query);
+            c.commit()
+        conn.close()
+
+    #Function returns the status of the Pig. !0 if hit and 0 if not hit
+    def get_status(PigID):
+        conn=sqlite3.connect('database.db')             #Establish connection with the database
+        c=conn.cursor()
+        is_hit=0;
+        query="SELECT * FROM HITSTATUS WHERE Pig"+str(PigID)+"='1'";
+        query="\"\""+query+"\"\"";
+        for row in c.execute(query):
+            is_hit=is_hit+1;
+
+        conn.close()
+        return is_hit
+
     
-        
-        
+    #Function returns the location of the Pig
+    def get_loc(PigID):
+        conn=sqlite3.connect('database.db')             #Establish connection with the database
+        c=conn.cursor()
+        query="SELECT * from PIGLOCATION WHERE PigID='"+str(PigID)"'";
+        query="\"\""+query+"\"\""
+        c.execute(query)
+        row=c.fetchone()
+        loc=[row[1],row[2]];
+        conn.close()
+        return loc
+                
             
 ##    def update_Status(PigID,status,iter_num):
 ##        f=open('database.txt','r+');                    #Open File
