@@ -144,7 +144,7 @@ class util:
 
         #Function to update the database. Maintains consistency between the local caches and the database
         #Input: Cache
-        def update_town_register(self, cache, iter_num):
+        def update_town_register(self, cache, iter_num,N):
                 pigs_info=[]
                 for item in cache.items():
                         pigs_info.append(list(item))

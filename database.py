@@ -41,7 +41,7 @@ class database:
     	def update_Status(self,PigID, status,iter_num):
         	conn=sqlite3.connect('database.db')             #Establish connection with the database
         	c=conn.cursor()
-        	query="SELECT * FROM HITSTASTUS WHERE ITERATION='"+iter_num+"'" #Check to see if  the Iteration number has been published before
+        	query="SELECT * FROM HITSTATUS WHERE ITERATION='"+str(iter_num)+"'" #Check to see if  the Iteration number has been published before
         	#query="\"\""+query+"\"\""
         	c.execute(query)
         	t=c.fetchone()
@@ -75,7 +75,7 @@ class database:
             		query="UPDATE PIGLOCATION SET location_X='"+str(loc_x)+"', location_Y='"+str(loc_y)+"' WHERE PigID='"+str(PigID)+"'";
             		#query="\"\""+query+"\"\""
             		c.execute(query);
-            		c.commit()
+            		conn.commit()
         	conn.close()
 
 	#Function returns the status of the Pig. !0 if hit and 0 if not hit

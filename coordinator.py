@@ -93,7 +93,6 @@ for i in range(M):
 				pig_status = int(pig_result[0])
 				pig_location = [int(pig_result[1]),int(pig_result[2])]
 				cache[pig]=[pig_status,pig_location]
-				#u.update_town_register(cache)
 				print 'Oink : Pig ',pig,' : Status : ',pig_status,' Location : ', pig_location
 	else:
 		#Receive the target for this iteration from the bird
@@ -128,7 +127,7 @@ for i in range(M):
                                 pig_location = [int(pig_result[1]),int(pig_result[2])]
 				cache[pig] = [pig_status,pig_location]
                                 print 'Doink : Pig ',pig,' : Status : ',pig_status,' Location : ', pig_location
-		
+	u.update_town_register(cache,i+1,N)	
 	#Tell the bird process that this iteration is done
 	c_socket.sendall('Iteration Done!')		
 
