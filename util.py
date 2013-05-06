@@ -104,7 +104,10 @@ class util:
                         if status[i]==0:
                                 not_hit.append(pigs[i]);
 
-                target=choice(not_hit);
+                if not_hit==[]:
+                        target=choice(pigs)
+                else:
+                        target=choice(not_hit);
                 return target
                                 
                         
